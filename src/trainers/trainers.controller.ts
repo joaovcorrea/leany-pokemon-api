@@ -1,3 +1,11 @@
+/**
+ * CONTROLLER DE TREINADORES — o "garçom"
+ *
+ * Só recebe requisições HTTP e repassa para o TrainersService.
+ * Não acessa banco diretamente.
+ *
+ * Rotas: POST/GET/PATCH/DELETE em /trainers
+ */
 import {
   Body,
   Controller,

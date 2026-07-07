@@ -1,3 +1,9 @@
+/**
+ * SERVIÇO DA POKÉAPI — único lugar que fala com o site externo
+ *
+ * Centraliza todas as chamadas HTTP para https://pokeapi.co
+ * Se o Pokémon não existir lá, devolve erro 404 para a nossa API.
+ */
 import { HttpService } from '@nestjs/axios';
 import {
   Injectable,

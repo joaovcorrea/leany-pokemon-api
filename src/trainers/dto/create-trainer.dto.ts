@@ -1,3 +1,9 @@
+/**
+ * DTO DE ENTRADA — define o que pode vir no body do POST /trainers
+ *
+ * Os decoradores @IsString, @IsNotEmpty etc. são validados
+ * automaticamente pelo ValidationPipe configurado no main.ts
+ */
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 

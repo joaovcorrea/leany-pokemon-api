@@ -1,151 +1,168 @@
 # Leany Pokémon API
 
-API RESTful desenvolvida para o desafio técnico da vaga de **Desenvolvedor Backend Júnior** na Leany. A aplicação permite gerenciar Treinadores, Times e Pokémon, integrando-se com a [PokéAPI](https://pokeapi.co/) para validação e enriquecimento dos dados dos Pokémon.
+API para o desafio técnico da vaga de **Desenvolvedor Backend Júnior** na Leany.
 
-## Tecnologias
+Gerencia **Treinadores**, **Times** e **Pokémon**, buscando dados dos Pokémon na [PokéAPI](https://pokeapi.co/).
 
-- **NestJS** — framework principal
-- **TypeORM** — ORM para persistência
-- **PostgreSQL** — banco de dados relacional
-- **Docker Compose** — ambiente do banco
-- **Swagger** — documentação da API
-- **class-validator / class-transformer** — validação de DTOs
-- **Axios (@nestjs/axios)** — integração com a PokéAPI
+> **Não manja de NestJS?** Leia o **[GUIA_ESTUDO.md](./GUIA_ESTUDO.md)** — explica tudo em linguagem simples, com roteiro para o vídeo da Loom e perguntas de entrevista.
 
-## Arquitetura
+---
 
-A aplicação segue o padrão em camadas do NestJS:
+## O que este projeto faz?
 
-```
-src/
-├── entities/           # Entidades do banco (não expostas na API)
-├── trainers/           # Módulo de Treinadores (Controller → Service → Repository)
-├── teams/              # Módulo de Times
-├── team-pokemons/      # Módulo de Pokémon nos Times
-└── poke-api/           # Serviço dedicado à integração com a PokéAPI
-```
+Em resumo:
 
-### Decisões de projeto
+1. Você cadastra **treinadores** (nome, cidade)
+2. Cada treinador pode ter **times**
+3. Cada time pode ter até **6 Pokémon**
+4. Os dados do Pokémon (nome, tipo, imagem) vêm da **PokéAPI** — só guardamos o ID no banco
 
-1. **PokeApiService isolado**: Toda comunicação com a PokéAPI fica centralizada em um serviço dedicado, facilitando manutenção e testes.
-2. **DTOs para entrada e saída**: As entidades do TypeORM nunca são retornadas diretamente nos endpoints.
-3. **Validação na adição de Pokémon**: Antes de persistir, o serviço consulta a PokéAPI para garantir que o Pokémon existe.
-4. **Limite de 6 Pokémon por time**: Regra de negócio aplicada no `TeamPokemonsService`.
-5. **Identificador normalizado**: Ao adicionar um Pokémon por nome (ex: `pikachu`), o ID numérico retornado pela PokéAPI é armazenado para consistência.
-6. **Cascade delete**: Ao remover um Treinador, seus Times e Pokémon associados são removidos automaticamente.
+---
 
-### Modelo de dados
+## Tecnologias usadas
 
-```
-Treinador (1) ──→ (N) Time (1) ──→ (N) TeamPokemon ──→ PokéAPI (externo)
-```
+| Tecnologia | Para que serve |
+|------------|----------------|
+| NestJS | Framework da API |
+| TypeORM | Comunicação com o banco |
+| PostgreSQL | Banco de dados |
+| Docker | Rodar o banco facilmente |
+| Swagger | Documentação em `/docs` |
+| class-validator | Validar dados de entrada |
+| Axios | Chamar a PokéAPI |
 
-## Pré-requisitos
+---
+
+## Como rodar
+
+### Pré-requisitos
 
 - Node.js 18+
-- Docker e Docker Compose
-- npm
+- Docker Desktop instalado
 
-## Como executar
-
-### 1. Clonar o repositório
+### Passos
 
 ```bash
+# 1. Clonar e entrar na pasta
 git clone <url-do-repositorio>
 cd leany-pokemon-api
-```
 
-### 2. Configurar variáveis de ambiente
+# 2. Configurar ambiente
+copy .env.example .env
 
-```bash
-cp .env.example .env
-```
-
-### 3. Subir o banco de dados
-
-```bash
+# 3. Subir o banco de dados
 docker compose up -d
-```
 
-### 4. Instalar dependências e rodar a API
-
-```bash
+# 4. Instalar e rodar
 npm install
 npm run start:dev
 ```
 
-A API estará disponível em `http://localhost:3000`.
+- **API:** http://localhost:3000
+- **Swagger (testar endpoints):** http://localhost:3000/docs
 
-### 5. Acessar a documentação Swagger
+---
 
-Abra no navegador: **http://localhost:3000/docs**
+## Endpoints
 
-## Endpoints principais
+### Treinadores — `/trainers`
 
-### Treinadores
-
-| Método | Rota | Descrição |
+| Método | Rota | O que faz |
 |--------|------|-----------|
 | POST | `/trainers` | Criar treinador |
-| GET | `/trainers` | Listar treinadores |
-| GET | `/trainers/:id` | Buscar treinador |
-| PATCH | `/trainers/:id` | Atualizar treinador |
-| DELETE | `/trainers/:id` | Remover treinador |
+| GET | `/trainers` | Listar todos |
+| GET | `/trainers/:id` | Buscar um |
+| PATCH | `/trainers/:id` | Atualizar |
+| DELETE | `/trainers/:id` | Remover |
 
 ### Times
 
-| Método | Rota | Descrição |
+| Método | Rota | O que faz |
 |--------|------|-----------|
-| POST | `/trainers/:trainerId/teams` | Criar time para um treinador |
-| GET | `/trainers/:trainerId/teams` | Listar times de um treinador |
+| POST | `/trainers/:trainerId/teams` | Criar time |
+| GET | `/trainers/:trainerId/teams` | Listar times do treinador |
 | GET | `/teams/:teamId` | Buscar time |
-| PATCH | `/teams/:teamId` | Atualizar time |
-| DELETE | `/teams/:teamId` | Remover time |
+| PATCH | `/teams/:teamId` | Atualizar |
+| DELETE | `/teams/:teamId` | Remover |
 
-### Pokémon dos Times
+### Pokémon nos times — `/teams/:teamId/pokemons`
 
-| Método | Rota | Descrição |
+| Método | Rota | O que faz |
 |--------|------|-----------|
-| POST | `/teams/:teamId/pokemons` | Adicionar Pokémon ao time |
-| GET | `/teams/:teamId/pokemons` | Listar Pokémon do time (com dados da PokéAPI) |
-| DELETE | `/teams/:teamId/pokemons/:teamPokemonId` | Remover Pokémon do time |
+| POST | `/teams/:teamId/pokemons` | Adicionar Pokémon |
+| GET | `/teams/:teamId/pokemons` | Listar (com dados da PokéAPI) |
+| DELETE | `/teams/:teamId/pokemons/:teamPokemonId` | Remover |
 
-## Exemplo de uso
+---
+
+## Exemplo rápido (Swagger é mais fácil)
+
+Se preferir linha de comando:
 
 ```bash
-# 1. Criar treinador
+# Criar treinador
 curl -X POST http://localhost:3000/trainers \
   -H "Content-Type: application/json" \
-  -d '{"nome": "Ash Ketchum", "cidadeOrigem": "Pallet Town"}'
+  -d "{\"nome\": \"Ash Ketchum\", \"cidadeOrigem\": \"Pallet Town\"}"
 
-# 2. Criar time (substitua TRAINER_ID)
+# Criar time (troque TRAINER_ID pelo id retornado acima)
 curl -X POST http://localhost:3000/trainers/TRAINER_ID/teams \
   -H "Content-Type: application/json" \
-  -d '{"nomeDoTime": "Time Elétrico"}'
+  -d "{\"nomeDoTime\": \"Time Elétrico\"}"
 
-# 3. Adicionar Pokémon (substitua TEAM_ID)
+# Adicionar Pikachu (troque TEAM_ID)
 curl -X POST http://localhost:3000/teams/TEAM_ID/pokemons \
   -H "Content-Type: application/json" \
-  -d '{"pokemonIdOuNome": "pikachu"}'
-
-# 4. Listar Pokémon do time com detalhes da PokéAPI
-curl http://localhost:3000/teams/TEAM_ID/pokemons
+  -d "{\"pokemonIdOuNome\": \"pikachu\"}"
 ```
 
-## Scripts disponíveis
+---
 
-| Script | Descrição |
-|--------|-----------|
-| `npm run start:dev` | Inicia em modo desenvolvimento com hot reload |
-| `npm run build` | Compila o projeto |
-| `npm run start:prod` | Inicia em produção |
-| `npm run lint` | Executa o linter |
-| `npm run test` | Executa testes unitários |
+## Arquitetura (resumo)
+
+```
+Requisição HTTP
+      ↓
+ Controller  →  recebe e valida
+      ↓
+  Service    →  regras de negócio
+      ↓
+ Repository  →  banco de dados
+```
+
+A PokéAPI tem um serviço separado (`PokeApiService`) para não misturar com a lógica do banco.
+
+Detalhes completos no **[GUIA_ESTUDO.md](./GUIA_ESTUDO.md)**.
+
+---
+
+## Decisões do projeto
+
+1. **PokéAPI isolada** — um serviço só para chamadas externas
+2. **DTOs** — entidades do banco nunca vão direto na resposta
+3. **Validação na adição** — consulta a PokéAPI antes de salvar
+4. **Máximo 6 Pokémon** por time
+5. **ID normalizado** — salva o número da PokéAPI (ex: `25`), não o nome
+6. **Cascade delete** — apagar treinador apaga times e pokémons dele
+
+---
 
 ## Vídeo explicativo (Loom)
 
-> Adicione aqui o link do seu vídeo no Loom explicando a solução, decisões de arquitetura e demonstração da API.
+> Cole aqui o link do seu vídeo. Use o roteiro do [GUIA_ESTUDO.md](./GUIA_ESTUDO.md#10-roteiro-sugerido-para-o-vídeo-loom-58-min).
+
+---
+
+## Scripts
+
+| Comando | O que faz |
+|---------|-----------|
+| `npm run start:dev` | Roda com hot reload |
+| `npm run build` | Compila o projeto |
+| `npm run start:prod` | Roda em produção |
+
+---
 
 ## Autor
 
-Seu Nome — [GitHub](https://github.com/seu-usuario)
+João Corrêa — [GitHub](https://github.com/joaovcorrea)

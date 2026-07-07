@@ -1,3 +1,13 @@
+/**
+ * SERVICE DE POKÉMON NOS TIMES — a parte mais importante do case
+ *
+ * Fluxo ao adicionar um Pokémon:
+ * 1. Verifica se o time existe
+ * 2. Consulta a PokéAPI (se não existir, erro 404)
+ * 3. Verifica limite de 6 e duplicatas
+ * 4. Salva só o ID do Pokémon no banco
+ * 5. Na listagem, busca detalhes na PokéAPI de novo
+ */
 import {
   BadRequestException,
   ConflictException,

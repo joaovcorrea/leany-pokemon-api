@@ -1,3 +1,10 @@
+/**
+ * SERVICE DE TREINADORES — o "cozinheiro"
+ *
+ * Contém a lógica de negócio: criar, buscar, atualizar, apagar.
+ * Chama o Repository para falar com o banco.
+ * Converte Entity → DTO antes de devolver (nunca expõe a entidade crua).
+ */
 import {
   Injectable,
   NotFoundException,
