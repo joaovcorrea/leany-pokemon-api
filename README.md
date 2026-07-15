@@ -147,12 +147,6 @@ Detalhes completos no **[GUIA_ESTUDO.md](./GUIA_ESTUDO.md)**.
 
 ---
 
-## Vídeo explicativo (Loom)
-
-> Cole aqui o link do seu vídeo. Use o roteiro do [GUIA_ESTUDO.md](./GUIA_ESTUDO.md#10-roteiro-sugerido-para-o-vídeo-loom-58-min).
-
----
-
 ## Scripts
 
 | Comando | O que faz |
