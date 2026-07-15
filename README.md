@@ -129,7 +129,6 @@ Requisição HTTP
 
 A PokéAPI tem um serviço separado (`PokeApiService`) para não misturar com a lógica do banco.
 
-Detalhes completos no **[GUIA_ESTUDO.md](./GUIA_ESTUDO.md)**.
 
 ---
 
