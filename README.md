@@ -4,9 +4,6 @@ API para o desafio técnico da vaga de **Desenvolvedor Backend Júnior** na Lean
 
 Gerencia **Treinadores**, **Times** e **Pokémon**, buscando dados dos Pokémon na [PokéAPI](https://pokeapi.co/).
 
-> **Não manja de NestJS?** Leia o **[GUIA_ESTUDO.md](./GUIA_ESTUDO.md)** — explica tudo em linguagem simples, com roteiro para o vídeo da Loom e perguntas de entrevista.
-
----
 
 ## O que este projeto faz?
 
